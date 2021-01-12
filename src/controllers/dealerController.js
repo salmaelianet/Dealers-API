@@ -1,4 +1,5 @@
 const Dealer = require('../models/dealer');
+const Vehicle = require('../models/vehicle');
 
 module.exports = {
 
@@ -38,7 +39,26 @@ module.exports = {
         const {dealerId}= req.params;
         const dealer = await Dealer.findByIdAndDelete(dealerId);
         res.status(200).json({success: true});
+    },
+
+    getDealersVehicles: async (req, res, next) => {
+        const {dealerId}= req.params;
+        const dealer = await (await Dealer.findById(dealerId)).populate('Vehicles');
+        res.status(200).json(dealer);
+    },
+
+    newDealerVehicle: async (req, res, next) => {
+        const { dealerId } = req.params;
+        const newVehicle = new Vehicle (req.body);
+        const dealer = await Dealer.findById(dealerId);
+        newVehicle.Owner = dealer;
+        await newVehicle.save();
+        dealer.Vehicle.push(newVehicle);
+        
+        await dealer.save();
+        res.status(201).json(newVehicle);
     }
+
 
 
 };

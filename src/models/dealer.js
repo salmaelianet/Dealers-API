@@ -5,9 +5,11 @@ const dealerSchema = new Schema ({
     Name:String,
     Ci:Number,
     Phone:Number,
-    LicensePlate:String,
-    TypeOfVehicle:String
+    Vehicle: [{
+        type: Schema.Types.ObjectId,
+        ref: 'vehicle'
+    }]
 
 });
 
-module.exports = mongoose.model('Dealer', dealerSchema);
+module.exports = mongoose.model('dealer', dealerSchema);
